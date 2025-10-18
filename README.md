@@ -150,13 +150,6 @@ The application is tested and compatible with:
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Contact
-
-For questions or support, please contact:
-- **Email**: info@nursway.com
-- **Phone**: +966 50 123 4567
-- **Address**: Riyadh, Saudi Arabia
-
 ## Acknowledgments
 
 - Design inspiration from modern healthcare applications
