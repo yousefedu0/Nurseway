@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nursway - منصة التمريض</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo" onclick="showPage('homepage')" style="cursor: pointer;">
+                <div class="logo-icon">✚</div>
+                <span class="logo-text">Nursway</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link" onclick="showPage('homepage')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">الرئيسية</span>
+                </a>
+                <a href="#" class="nav-link" onclick="navigateToPage('track')">
+                    <span class="nav-icon">→</span>
+                    <span class="nav-text">المسار</span>
+                </a>
+                <a href="#" class="nav-link" onclick="navigateToPage('books')">
+                    <span class="nav-icon">📚</span>
+                    <span class="nav-text">الكتب</span>
+                </a>
+                <a href="#" class="nav-link" onclick="navigateToPage('videos')">
+                    <span class="nav-icon">▶</span>
+                    <span class="nav-text">الفيديوهات</span>
+                </a>
+                <a href="#" class="nav-link" onclick="navigateToPage('groups')">
+                    <span class="nav-icon">🏷</span>
+                    <span class="nav-text">المجموعات</span>
+                </a>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn-login" onclick="showLoginPage()">تسجيل الدخول</button>
+                <button class="btn-signup" onclick="showSignupPage()">إنشاء حساب</button>
+            </div>
+            
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation Menu -->
+    <div class="mobile-nav" id="mobile-nav">
+        <div class="mobile-nav-links">
+            <a href="#" class="mobile-nav-link" onclick="showPage('homepage'); toggleMobileMenu();">
+                <span class="mobile-nav-icon">🏠</span>
+                <span class="mobile-nav-text">الرئيسية</span>
+            </a>
+            <a href="#" class="mobile-nav-link" onclick="navigateToPage('track'); toggleMobileMenu();">
+                <span class="mobile-nav-icon">→</span>
+                <span class="mobile-nav-text">المسار</span>
+            </a>
+            <a href="#" class="mobile-nav-link" onclick="navigateToPage('books'); toggleMobileMenu();">
+                <span class="mobile-nav-icon">📚</span>
+                <span class="mobile-nav-text">الكتب</span>
+            </a>
+            <a href="#" class="mobile-nav-link" onclick="navigateToPage('videos'); toggleMobileMenu();">
+                <span class="mobile-nav-icon">▶</span>
+                <span class="mobile-nav-text">الفيديوهات</span>
+            </a>
+            <a href="#" class="mobile-nav-link" onclick="navigateToPage('groups'); toggleMobileMenu();">
+                <span class="mobile-nav-icon">🏷</span>
+                <span class="mobile-nav-text">المجموعات</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+        <!-- Homepage -->
+        <section id="homepage" class="page active">
+            <div class="homepage-container">
+                <div class="search-bar">
+                    <input type="text" placeholder="اقسام مستشفى الجامعة" class="search-input">
+                    <div class="search-icon">🔎</div>
+                </div>
+                
+                <div class="hospital-tabs">
+                    <button class="tab-btn active" onclick="switchHospitalType('government')">المستشفيات الحكومية</button>
+                    <button class="tab-btn" onclick="switchHospitalType('private')">المستشفيات الخاصة</button>
+                </div>
+                
+                <div id="hospital-grid" class="hospital-grid">
+                    <!-- Hospital cards will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Page -->
+        <section id="login-page" class="page">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <span class="auth-title">تسجيل الدخول</span>
+                </div>
+                
+                <div class="auth-logo">
+                    <div class="auth-logo-icon">✚</div>
+                    <div class="auth-logo-text">Nursway</div>
+                </div>
+                
+                <form class="auth-form" id="login-form">
+                    <input type="text" placeholder="البريد الإلكتروني أو الهاتف" class="form-input" required>
+                    <input type="password" placeholder="كلمة المرور" class="form-input" required>
+                    <button type="submit" class="btn-login-submit">تسجيل الدخول</button>
+                </form>
+                
+                <div class="auth-switch">
+                    <p>ليس لديك حساب؟ <a href="#" onclick="showSignupPage()" class="switch-link">إنشاء حساب جديد</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Signup Page -->
+        <section id="signup-page" class="page">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <span class="auth-title">إنشاء حساب</span>
+                </div>
+                
+                <div class="auth-logo">
+                    <div class="auth-logo-icon">✚</div>
+                    <div class="auth-logo-text">Nursway</div>
+                </div>
+                
+                <form class="auth-form" id="signup-form">
+                    <input type="text" placeholder="الاسم" class="form-input" required>
+                    <input type="text" placeholder="البريد الإلكتروني أو الهاتف" class="form-input" required>
+                    <input type="password" placeholder="كلمة المرور" class="form-input" required>
+                    <input type="password" placeholder="تأكيد كلمة المرور" class="form-input" required>
+                    <div class="form-select">
+                        <select class="form-input" required>
+                            <option value="">الكلية أو المعهد</option>
+                            <option value="fayoum-nursing">Fayoum Nursing</option>
+                            <option value="cairo-nursing">Cairo Nursing</option>
+                            <option value="alexandria-nursing">Alexandria Nursing</option>
+                            <option value="mansoura-nursing">Mansoura Nursing</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                        <span class="select-arrow">▼</span>
+                    </div>
+                    <button type="submit" class="btn-register">تسجيل</button>
+                </form>
+                
+                <div class="auth-switch">
+                    <p>لديك حساب بالفعل؟ <a href="#" onclick="showLoginPage()" class="switch-link">تسجيل الدخول</a></p>
+                </div>
+                
+                <div class="auth-bottom">
+                    <p class="auth-description">اكتشف المستشفيات والمراكز الطبية القريبة منك</p>
+                    <div class="auth-buttons">
+                        <button class="btn-location">📍 تحديد الموقع</button>
+                        <button class="btn-learn-more">🔄 اعرف أكثر</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Hospital Details Page -->
+        <section id="hospital-details" class="page">
+            <div class="hospital-details-container">
+                <div class="hospital-header">
+                    <button class="back-btn" onclick="goBack()">← العودة</button>
+                    <h2 class="hospital-title" id="hospital-name">اسم المستشفى</h2>
+                </div>
+                
+                <div class="hospital-info">
+                    <div class="hospital-address">
+                        <strong>العنوان:</strong> <span id="hospital-address">العنوان هنا</span>
+                    </div>
+                    <div class="hospital-phone">
+                        <strong>الهاتف:</strong> <span id="hospital-phone">01234567890</span>
+                    </div>
+                </div>
+                
+                <div class="departments-section">
+                    <h3>الأقسام المتاحة</h3>
+                    <div id="departments-grid" class="departments-grid">
+                        <!-- Department cards will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Department Details Page -->
+        <section id="department-details" class="page">
+            <div class="department-details-container">
+                <div class="department-header">
+                    <button class="back-btn" onclick="goBack()">← العودة</button>
+                    <h2 class="department-title" id="department-name">اسم القسم</h2>
+                </div>
+                
+                <div class="department-info">
+                    <div class="department-description" id="department-description">
+                        وصف القسم والخدمات المتاحة...
+                    </div>
+                    <div class="department-services" id="department-services">
+                        <h4>الخدمات المتاحة:</h4>
+                        <ul id="services-list">
+                            <!-- Services will be populated by JavaScript -->
+                        </ul>
+                    </div>
+                    <div class="department-requirements" id="department-requirements">
+                        <h4>المتطلبات:</h4>
+                        <ul id="requirements-list">
+                            <!-- Requirements will be populated by JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+                
+                <button class="btn-apply" onclick="applyForIntern()">التقدم للتدريب</button>
+            </div>
+        </section>
+
+        <!-- Coming Soon Pages -->
+        <section id="coming-soon" class="page">
+            <div class="coming-soon-container">
+                <div class="coming-soon-header">
+                    <button class="back-btn" onclick="goBack()">← العودة</button>
+                    <h2 class="coming-soon-title" id="coming-soon-title">قريباً</h2>
+                </div>
+                <div class="coming-soon-content">
+                    <div class="coming-soon-icon">🚧</div>
+                    <p class="coming-soon-text">هذه الصفحة قيد التطوير</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>تواصل معنا</h4>
+                    <p class="contact-item">📞 +20 10 95929291</p>
+                    <p class="contact-item">✉️ info@nursway.com</p>
+                </div>
+                <div class="footer-section">
+                    <h4>العنوان</h4>
+                    <p class="address-item">📍 Fayoum - Egypt</p>
+                </div>
+                <div class="footer-section">
+                    <h4>تابعنا</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-link facebook" title="Facebook">📘</a>
+                        <a href="#" class="social-link telegram" title="Telegram">✈️</a>
+                        <a href="#" class="social-link whatsapp" title="WhatsApp">💬</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Nursway. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
