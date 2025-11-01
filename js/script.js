@@ -740,16 +740,16 @@ function goBack() {
     switch (currentPage) {
         case 'login-page':
         case 'signup-page':
-            showPage('homepage');
-            break;
+        case 'track-page':
+        case 'books-page':
+        case 'videos-page':
+        case 'groups-page':
+        case 'consultations-page':
         case 'hospital-details':
             showPage('homepage');
             break;
         case 'department-details':
             showPage('hospital-details');
-            break;
-        case 'coming-soon':
-            showPage('homepage');
             break;
         default:
             showPage('homepage');
@@ -871,34 +871,580 @@ function showDepartmentDetails(department) {
     }
 }
 
-// Coming soon pages
+// Content pages navigation
 function navigateToPage(pageType) {
     switch (pageType) {
-        case 'books':
         case 'track':
+            showPage('track-page');
+            loadTracks();
+            break;
+        case 'books':
+            showPage('books-page');
+            loadBooks();
+            break;
         case 'videos':
+            showPage('videos-page');
+            loadVideos();
+            break;
         case 'groups':
-            showComingSoon(pageType);
+            showPage('groups-page');
+            loadPackages();
+            break;
+        case 'consultations':
+            showPage('consultations-page');
+            loadConsultations();
             break;
         default:
             showPage('homepage');
     }
 }
 
-function showComingSoon(pageType) {
-    const comingSoonTitle = document.getElementById('coming-soon-title');
-    const pageNames = {
-        'books': 'الكتب',
-        'track': 'المسار',
-        'videos': 'الفيديوهات',
-        'groups': 'المجموعات'
-    };
+// Tracks/Roadmaps data
+const tracksData = [
+    {
+        id: 'track-1',
+        title: 'تمريض العناية المركزة',
+        icon: '🏥',
+        description: 'مسار شامل للتدريب على تمريض العناية المركزة والرعاية الحرجة',
+        roadmap: [
+            'أساسيات تمريض العناية المركزة',
+            'قراءة وفهم أجهزة المراقبة',
+            'إدارة المسالك التنفسية والتنفس الاصطناعي',
+            'رعاية المرضى على أجهزة دعم الحياة',
+            'التعامل مع حالات الطوارئ الطبية',
+            'إدارة الأدوية الوريدية المتقدمة',
+            'التدريب العملي في وحدات العناية المركزة'
+        ]
+    },
+    {
+        id: 'track-2',
+        title: 'تمريض الطوارئ',
+        icon: '🚨',
+        description: 'تدريب متخصص على تمريض قسم الطوارئ والحالات الحرجة',
+        roadmap: [
+            'مبادئ الإسعافات الأولية المتقدمة',
+            'تقييم أولي سريع للمرضى (Triage)',
+            'إدارة الصدمات والإصابات',
+            'رعاية الحالات القلبية والتنفسية الطارئة',
+            'التعامل مع حالات التسمم والحروق',
+            'إدارة الجروح والإصابات المختلفة',
+            'التدريب العملي في أقسام الطوارئ'
+        ]
+    },
+    {
+        id: 'track-3',
+        title: 'تمريض الأطفال وحديثي الولادة',
+        icon: '👶',
+        description: 'مسار متخصص لرعاية الأطفال وحديثي الولادة',
+        roadmap: [
+            'أساسيات نمو وتطور الطفل',
+            'رعاية حديثي الولادة والعناية الخاصة',
+            'تمريض أمراض الأطفال الشائعة',
+            'إدارة الحالات الحرجة للأطفال',
+            'التحصين والوقاية من الأمراض',
+            'رعاية الأطفال المعرضين للخطر',
+            'التدريب العملي في أقسام الأطفال'
+        ]
+    },
+    {
+        id: 'track-4',
+        title: 'تمريض الأورام والعلاج الكيميائي',
+        icon: '🎗️',
+        description: 'تدريب متقدم على تمريض مرضى الأورام والعلاج الكيميائي',
+        roadmap: [
+            'مبادئ علم الأورام الأساسية',
+            'إدارة العلاج الكيميائي والعلاج الإشعاعي',
+            'رعاية المرضى أثناء العلاج',
+            'إدارة الآثار الجانبية للعلاج',
+            'رعاية المسكنات وإدارة الألم',
+            'الدعم النفسي للمرضى وأسرهم',
+            'التدريب العملي في أقسام الأورام'
+        ]
+    }
+];
+
+// Books data
+const booksData = [
+    {
+        id: 'book-1',
+        title: 'تمريض العناية المركزة - دليل شامل',
+        author: 'د. محمد أحمد',
+        downloadUrl: 'https://example.com/books/critical-care-nursing.pdf'
+    },
+    {
+        id: 'book-2',
+        title: 'أساسيات التمريض الطبي والجراحي',
+        author: 'جمعية التمريض المصرية',
+        downloadUrl: 'https://example.com/books/medical-surgical-nursing.pdf'
+    },
+    {
+        id: 'book-3',
+        title: 'تمريض الطوارئ والإسعافات الأولية',
+        author: 'د. سارة محمود',
+        downloadUrl: 'https://example.com/books/emergency-nursing.pdf'
+    },
+    {
+        id: 'book-4',
+        title: 'تمريض الأطفال الشامل',
+        author: 'د. علي حسن',
+        downloadUrl: 'https://example.com/books/pediatric-nursing.pdf'
+    },
+    {
+        id: 'book-5',
+        title: 'رعاية مرضى الأورام',
+        author: 'د. فاطمة إبراهيم',
+        downloadUrl: 'https://example.com/books/oncology-nursing.pdf'
+    },
+    {
+        id: 'book-6',
+        title: 'مبادئ التمريض الأساسية',
+        author: 'كلية التمريض - جامعة القاهرة',
+        downloadUrl: 'https://example.com/books/basic-nursing.pdf'
+    },
+    {
+        id: 'book-7',
+        title: 'تمريض حديثي الولادة',
+        author: 'د. أميرة عبدالله',
+        downloadUrl: 'https://example.com/books/neonatal-nursing.pdf'
+    },
+    {
+        id: 'book-8',
+        title: 'إدارة الأدوية في التمريض',
+        author: 'د. محمود خالد',
+        downloadUrl: 'https://example.com/books/pharmacology-nursing.pdf'
+    }
+];
+
+// Videos data
+const videosData = [
+    {
+        id: 'video-1',
+        title: 'دورة شاملة في تمريض العناية المركزة',
+        channel: 'أكاديمية التمريض المتقدم',
+        videoUrl: 'https://example.com/sources/001'
+    },
+    {
+        id: 'video-2',
+        title: 'أساسيات تمريض الطوارئ والإسعافات الأولية',
+        channel: 'قناة التمريض التعليمية',
+        videoUrl: 'https://example.com/sources/002'
+    },
+    {
+        id: 'video-3',
+        title: 'تمريض الأطفال - دورة متكاملة',
+        channel: 'معهد التمريض التخصصي',
+        videoUrl: 'https://example.com/sources/003'
+    },
+    {
+        id: 'video-4',
+        title: 'رعاية مرضى الأورام والعلاج الكيميائي',
+        channel: 'مركز التمريض المتخصص',
+        videoUrl: 'https://example.com/sources/004'
+    },
+    {
+        id: 'video-5',
+        title: 'قراءة وتفسير مخطط القلب الكهربائي',
+        channel: 'قناة التمريض الإكلينيكي',
+        videoUrl: 'https://example.com/sources/005'
+    },
+    {
+        id: 'video-6',
+        title: 'إدارة المسالك التنفسية والتنفس الاصطناعي',
+        channel: 'أكاديمية العناية الحرجة',
+        videoUrl: 'https://example.com/sources/006'
+    },
+    {
+        id: 'video-7',
+        title: 'تمريض حديثي الولادة والعناية الخاصة',
+        channel: 'قناة التمريض للأطفال',
+        videoUrl: 'https://example.com/sources/007'
+    },
+    {
+        id: 'video-8',
+        title: 'مهارات التواصل مع المرضى وأسرهم',
+        channel: 'معهد المهارات التمريضية',
+        videoUrl: 'https://example.com/sources/008'
+    }
+];
+
+// Packages data
+const packagesData = [
+    {
+        id: 'package-1',
+        title: 'الباقة الأساسية',
+        price: 1500,
+        originalPrice: 2000,
+        discount: 25,
+        features: [
+            'وصول إلى المسارات التعليمية الأربعة',
+            'تحميل 4 كتب مجانية',
+            'مشاهدة 4 دورات فيديو',
+            'شهادة إتمام لكل مسار',
+            'دعم فني عبر البريد الإلكتروني'
+        ],
+        featured: false
+    },
+    {
+        id: 'package-2',
+        title: 'الباقة المتقدمة',
+        price: 3000,
+        originalPrice: 4000,
+        discount: 25,
+        features: [
+            'كل ما في الباقة الأساسية',
+            'وصول إلى جميع الكتب (8 كتب)',
+            'مشاهدة جميع الدورات (8 دورات)',
+            'تدريب عملي مكثف (20 ساعة)',
+            'شهادات معتمدة',
+            'دعم فني على مدار الساعة',
+            'جلسات استشارية مع خبراء'
+        ],
+        featured: true
+    },
+    {
+        id: 'package-3',
+        title: 'الباقة المميزة',
+        price: 4500,
+        originalPrice: 6000,
+        discount: 25,
+        features: [
+            'كل ما في الباقة المتقدمة',
+            'وصول مدى الحياة لجميع المحتويات',
+            'تدريب عملي متقدم (40 ساعة)',
+            'شهادات معتمدة دولياً',
+            'دعم شخصي مع مدرب خاص',
+            'ورش عمل شهرية',
+            'فرص تدريب في مستشفيات معتمدة',
+            'شهادة خبرة عملية'
+        ],
+        featured: false
+    }
+];
+
+// Load functions
+function loadTracks() {
+    const tracksGrid = document.getElementById('tracks-grid');
+    if (!tracksGrid) return;
     
-    if (comingSoonTitle) {
-        comingSoonTitle.textContent = pageNames[pageType] || 'قريباً';
+    tracksGrid.innerHTML = '';
+    
+    tracksData.forEach(track => {
+        const trackCard = document.createElement('div');
+        trackCard.className = 'track-card';
+        
+        const roadmapList = track.roadmap.map(step => 
+            `<li class="roadmap-step">${step}</li>`
+        ).join('');
+        
+        trackCard.innerHTML = `
+            <div class="track-icon">${track.icon}</div>
+            <h3 class="track-title">${track.title}</h3>
+            <p class="track-description">${track.description}</p>
+            <ul class="roadmap-steps">
+                ${roadmapList}
+            </ul>
+        `;
+        
+        tracksGrid.appendChild(trackCard);
+    });
+}
+
+function loadBooks() {
+    const booksGrid = document.getElementById('books-grid');
+    if (!booksGrid) return;
+    
+    booksGrid.innerHTML = '';
+    
+    booksData.forEach(book => {
+        const bookCard = document.createElement('div');
+        bookCard.className = 'book-card';
+        
+        bookCard.innerHTML = `
+            <div class="book-image">
+                <span class="book-icon">📚</span>
+            </div>
+            <h3 class="book-title">${book.title}</h3>
+            <p class="book-author">${book.author}</p>
+            <a href="${book.downloadUrl}" target="_blank" class="book-download-btn">تحميل الكتاب</a>
+        `;
+        
+        booksGrid.appendChild(bookCard);
+    });
+}
+
+function loadVideos() {
+    const videosGrid = document.getElementById('videos-grid');
+    if (!videosGrid) return;
+    
+    videosGrid.innerHTML = '';
+    
+    videosData.forEach(video => {
+        const videoCard = document.createElement('div');
+        videoCard.className = 'video-card';
+        
+        videoCard.innerHTML = `
+            <div class="video-thumbnail">
+                <span class="video-icon">▶</span>
+            </div>
+            <h3 class="video-title">${video.title}</h3>
+            <p class="video-channel">${video.channel}</p>
+            <a href="${video.videoUrl}" target="_blank" class="video-link-btn">مشاهدة الدورة</a>
+        `;
+        
+        videosGrid.appendChild(videoCard);
+    });
+}
+
+function loadPackages() {
+    const packagesGrid = document.getElementById('packages-grid');
+    if (!packagesGrid) return;
+    
+    packagesGrid.innerHTML = '';
+    
+    packagesData.forEach(pkg => {
+        const packageCard = document.createElement('div');
+        packageCard.className = `package-card ${pkg.featured ? 'featured' : ''}`;
+        
+        const featuresList = pkg.features.map(feature => 
+            `<li class="package-feature">${feature}</li>`
+        ).join('');
+        
+        const badgeHtml = pkg.featured ? '<div class="package-badge">الأكثر مبيعاً</div>' : '';
+        
+        packageCard.innerHTML = `
+            ${badgeHtml}
+            <h3 class="package-title">${pkg.title}</h3>
+            <div class="package-price">
+                <span class="package-price-current">${pkg.price} جنيه</span>
+                <span class="package-price-original">${pkg.originalPrice} جنيه</span>
+                <span class="package-discount">خصم ${pkg.discount}%</span>
+            </div>
+            <ul class="package-features">
+                ${featuresList}
+            </ul>
+            <button class="package-buy-btn" onclick="purchasePackage('${pkg.id}')">اشترك الآن</button>
+        `;
+        
+        packagesGrid.appendChild(packageCard);
+    });
+}
+
+function purchasePackage(packageId) {
+    const packageData = packagesData.find(p => p.id === packageId);
+    if (packageData) {
+        alert(`شكراً لاهتمامك! سيتم التواصل معك قريباً لإتمام الاشتراك في ${packageData.title} بسعر ${packageData.price} جنيه.`);
+    }
+}
+
+// Experts data for consultations
+const expertsData = [
+    {
+        id: 'expert-1',
+        name: 'د. سارة محمود',
+        title: 'أخصائية تمريض العناية المركزة',
+        specialties: ['العناية المركزة', 'الطوارئ', 'الرعاية الحرجة'],
+        experience: '15+ سنة خبرة',
+        avatar: 'SM'
+    },
+    {
+        id: 'expert-2',
+        name: 'د. محمد أحمد',
+        title: 'أخصائي تمريض الأطفال',
+        specialties: ['تمريض الأطفال', 'حديثي الولادة', 'الرعاية النيوناتالية'],
+        experience: '12+ سنة خبرة',
+        avatar: 'MA'
+    },
+    {
+        id: 'expert-3',
+        name: 'د. فاطمة إبراهيم',
+        title: 'أخصائية تمريض الأورام',
+        specialties: ['تمريض الأورام', 'العلاج الكيميائي', 'الرعاية التلطيفية'],
+        experience: '18+ سنة خبرة',
+        avatar: 'FI'
+    },
+    {
+        id: 'expert-4',
+        name: 'د. علي حسن',
+        title: 'أخصائي التطوير المهني للتمريض',
+        specialties: ['التطوير المهني', 'التدريب', 'الإدارة التمريضية'],
+        experience: '20+ سنة خبرة',
+        avatar: 'AH'
+    },
+    {
+        id: 'expert-5',
+        name: 'د. أميرة عبدالله',
+        title: 'أخصائية تمريض التوليد وأمراض النساء',
+        specialties: ['التوليد', 'أمراض النساء', 'رعاية الحوامل'],
+        experience: '14+ سنة خبرة',
+        avatar: 'AA'
+    },
+    {
+        id: 'expert-6',
+        name: 'د. محمود خالد',
+        title: 'أخصائي تمريض الجراحة',
+        specialties: ['الجراحة العامة', 'التخدير', 'ما بعد الجراحة'],
+        experience: '16+ سنة خبرة',
+        avatar: 'MK'
+    }
+];
+
+// Load consultations page
+function loadConsultations() {
+    loadExperts();
+    setupConsultationForm();
+}
+
+function loadExperts() {
+    const expertsGrid = document.getElementById('experts-grid');
+    const expertSelect = document.getElementById('expert-select');
+    
+    if (!expertsGrid) return;
+    
+    expertsGrid.innerHTML = '';
+    if (expertSelect) {
+        expertSelect.innerHTML = '<option value="">-- اختر خبير --</option>';
     }
     
-    showPage('coming-soon');
+    expertsData.forEach(expert => {
+        // Add to experts grid
+        const expertCard = document.createElement('div');
+        expertCard.className = 'expert-card';
+        expertCard.dataset.expertId = expert.id;
+        
+        const specialtiesBadges = expert.specialties.map(specialty => 
+            `<span class="specialty-badge">${specialty}</span>`
+        ).join('');
+        
+        expertCard.innerHTML = `
+            <div class="expert-header">
+                <div class="expert-avatar">${expert.avatar}</div>
+                <div class="expert-info">
+                    <h4>${expert.name}</h4>
+                    <p class="expert-title">${expert.title}</p>
+                </div>
+            </div>
+            <div class="expert-specialties">
+                ${specialtiesBadges}
+            </div>
+            <div class="expert-experience">${expert.experience}</div>
+        `;
+        
+        expertCard.addEventListener('click', () => {
+            // Remove selected class from all cards
+            document.querySelectorAll('.expert-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            // Add selected class to clicked card
+            expertCard.classList.add('selected');
+            // Update select dropdown
+            if (expertSelect) {
+                expertSelect.value = expert.id;
+            }
+        });
+        
+        expertsGrid.appendChild(expertCard);
+        
+        // Add to select dropdown
+        if (expertSelect) {
+            const option = document.createElement('option');
+            option.value = expert.id;
+            option.textContent = `${expert.name} - ${expert.title}`;
+            expertSelect.appendChild(option);
+        }
+    });
+}
+
+function setupConsultationForm() {
+    const form = document.getElementById('consultation-form');
+    const expertSelect = document.getElementById('expert-select');
+    
+    if (!form) return;
+    
+    // Set minimum date to today
+    const dateInput = document.getElementById('consultation-date');
+    if (dateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.min = today;
+    }
+    
+    // Handle expert selection from dropdown
+    if (expertSelect) {
+        expertSelect.addEventListener('change', function() {
+            const expertId = this.value;
+            // Remove selected class from all cards
+            document.querySelectorAll('.expert-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            // Add selected class to matching card
+            if (expertId) {
+                const expertCard = document.querySelector(`.expert-card[data-expert-id="${expertId}"]`);
+                if (expertCard) {
+                    expertCard.classList.add('selected');
+                }
+            }
+        });
+    }
+    
+    // Handle form submission
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const expertId = expertSelect.value;
+        const consultationType = document.getElementById('consultation-type').value;
+        const consultationDate = document.getElementById('consultation-date').value;
+        const consultationTime = document.getElementById('consultation-time').value;
+        const consultationDuration = document.getElementById('consultation-duration').value;
+        const consultationMessage = document.getElementById('consultation-message').value;
+        const contactPhone = document.getElementById('contact-phone').value;
+        const contactEmail = document.getElementById('contact-email').value;
+        
+        if (!expertId) {
+            alert('يرجى اختيار خبير من القائمة');
+            return;
+        }
+        
+        const selectedExpert = expertsData.find(e => e.id === expertId);
+        const durationMinutes = consultationDuration;
+        const prices = {
+            '30': 200,
+            '60': 350,
+            '90': 500
+        };
+        const price = prices[consultationDuration] || 200;
+        
+        // Format date for display
+        const dateObj = new Date(consultationDate);
+        const formattedDate = dateObj.toLocaleDateString('ar-EG', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        const confirmationMessage = `
+تم إرسال طلب الاستشارة بنجاح!
+
+تفاصيل الحجز:
+- الخبير: ${selectedExpert.name}
+- نوع الاستشارة: ${document.getElementById('consultation-type').selectedOptions[0].text}
+- التاريخ: ${formattedDate}
+- الوقت: ${consultationTime}
+- المدة: ${durationMinutes} دقيقة
+- السعر: ${price} جنيه
+
+سيتم التواصل معك على ${contactEmail} أو ${contactPhone} لتأكيد الحجز.
+
+شكراً لك!
+        `;
+        
+        alert(confirmationMessage);
+        
+        // Reset form
+        form.reset();
+        document.querySelectorAll('.expert-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+    });
 }
 
 // Apply for intern function
@@ -1112,3 +1658,4 @@ window.showHospitalDetails = showHospitalDetails;
 window.showDepartmentDetails = showDepartmentDetails;
 window.applyForIntern = applyForIntern;
 window.toggleMobileMenu = toggleMobileMenu;
+window.purchasePackage = purchasePackage;

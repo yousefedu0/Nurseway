@@ -36,6 +36,10 @@
                     <span class="nav-icon">🏷</span>
                     <span class="nav-text">المجموعات</span>
                 </a>
+                <a href="#" class="nav-link" onclick="navigateToPage('consultations')">
+                    <span class="nav-icon">💬</span>
+                    <span class="nav-text">حجز الاستشارات</span>
+                </a>
             </div>
             <div class="nav-buttons">
                 <button class="btn-login" onclick="showLoginPage()">تسجيل الدخول</button>
@@ -72,6 +76,10 @@
             <a href="#" class="mobile-nav-link" onclick="navigateToPage('groups'); toggleMobileMenu();">
                 <span class="mobile-nav-icon">🏷</span>
                 <span class="mobile-nav-text">المجموعات</span>
+            </a>
+            <a href="#" class="mobile-nav-link" onclick="navigateToPage('consultations'); toggleMobileMenu();">
+                <span class="mobile-nav-icon">💬</span>
+                <span class="mobile-nav-text">حجز الاستشارات</span>
             </a>
         </div>
     </div>
@@ -223,16 +231,148 @@
             </div>
         </section>
 
-        <!-- Coming Soon Pages -->
-        <section id="coming-soon" class="page">
-            <div class="coming-soon-container">
-                <div class="coming-soon-header">
+        <!-- Track/Roadmap Page -->
+        <section id="track-page" class="page">
+            <div class="content-page-container">
+                <div class="content-page-header">
                     <button class="back-btn" onclick="goBack()">← العودة</button>
-                    <h2 class="coming-soon-title" id="coming-soon-title">قريباً</h2>
+                    <h2 class="content-page-title">المسار التعليمي</h2>
                 </div>
-                <div class="coming-soon-content">
-                    <div class="coming-soon-icon">🚧</div>
-                    <p class="coming-soon-text">هذه الصفحة قيد التطوير</p>
+                <div id="tracks-grid" class="tracks-grid">
+                    <!-- Tracks will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Books Page -->
+        <section id="books-page" class="page">
+            <div class="content-page-container">
+                <div class="content-page-header">
+                    <button class="back-btn" onclick="goBack()">← العودة</button>
+                    <h2 class="content-page-title">الكتب</h2>
+                </div>
+                <div id="books-grid" class="books-grid">
+                    <!-- Books will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Videos Page -->
+        <section id="videos-page" class="page">
+            <div class="content-page-container">
+                <div class="content-page-header">
+                    <button class="back-btn" onclick="goBack()">← العودة</button>
+                    <h2 class="content-page-title">الفيديوهات والدورات</h2>
+                </div>
+                <div id="videos-grid" class="videos-grid">
+                    <!-- Videos will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Packages/Groups Page -->
+        <section id="groups-page" class="page">
+            <div class="content-page-container">
+                <div class="content-page-header">
+                    <button class="back-btn" onclick="goBack()">← العودة</button>
+                    <h2 class="content-page-title">الباقات والاشتراكات</h2>
+                </div>
+                <div id="packages-grid" class="packages-grid">
+                    <!-- Packages will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Consultations Page -->
+        <section id="consultations-page" class="page">
+            <div class="content-page-container">
+                <div class="content-page-header">
+                    <button class="back-btn" onclick="goBack()">← العودة</button>
+                    <h2 class="content-page-title">حجز الاستشارات</h2>
+                </div>
+                <div class="consultations-intro">
+                    <p>احجز استشارة مع خبراء التمريض المتخصصين واحصل على إرشادات مهنية متخصصة</p>
+                </div>
+                
+                <div class="consultations-layout">
+                    <div class="experts-section">
+                        <h3 class="section-title">الخبراء المتاحون</h3>
+                        <div id="experts-grid" class="experts-grid">
+                            <!-- Experts will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="booking-section">
+                        <div class="booking-form-container">
+                            <h3 class="section-title">نموذج الحجز</h3>
+                            <form id="consultation-form" class="consultation-form">
+                                <div class="form-group">
+                                    <label for="expert-select">اختر الخبير:</label>
+                                    <select id="expert-select" class="form-input" required>
+                                        <option value="">-- اختر خبير --</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="consultation-type">نوع الاستشارة:</label>
+                                    <select id="consultation-type" class="form-input" required>
+                                        <option value="">-- اختر نوع الاستشارة --</option>
+                                        <option value="career">استشارة مهنية</option>
+                                        <option value="clinical">استشارة إكلينيكية</option>
+                                        <option value="specialty">استشارة تخصصية</option>
+                                        <option value="education">استشارة تعليمية</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="consultation-date">التاريخ المفضل:</label>
+                                    <input type="date" id="consultation-date" class="form-input" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="consultation-time">الوقت المفضل:</label>
+                                    <select id="consultation-time" class="form-input" required>
+                                        <option value="">-- اختر الوقت --</option>
+                                        <option value="09:00">09:00 صباحاً</option>
+                                        <option value="10:00">10:00 صباحاً</option>
+                                        <option value="11:00">11:00 صباحاً</option>
+                                        <option value="12:00">12:00 ظهراً</option>
+                                        <option value="13:00">01:00 ظهراً</option>
+                                        <option value="14:00">02:00 ظهراً</option>
+                                        <option value="15:00">03:00 عصراً</option>
+                                        <option value="16:00">04:00 عصراً</option>
+                                        <option value="17:00">05:00 مساءً</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="consultation-duration">مدة الاستشارة:</label>
+                                    <select id="consultation-duration" class="form-input" required>
+                                        <option value="30">30 دقيقة - 200 جنيه</option>
+                                        <option value="60">60 دقيقة - 350 جنيه</option>
+                                        <option value="90">90 دقيقة - 500 جنيه</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="consultation-message">وصف الاستشارة (اختياري):</label>
+                                    <textarea id="consultation-message" class="form-input" rows="4" placeholder="اكتب وصفاً مختصراً عن موضوع الاستشارة..."></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="contact-phone">رقم الهاتف:</label>
+                                    <input type="tel" id="contact-phone" class="form-input" placeholder="01xxxxxxxxx" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="contact-email">البريد الإلكتروني:</label>
+                                    <input type="email" id="contact-email" class="form-input" placeholder="example@email.com" required>
+                                </div>
+                                
+                                <button type="submit" class="btn-book-consultation">احجز الاستشارة</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
